@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>NIH Center Distance Finder</title>
-  <link rel="stylesheet" href="https://unpkg.com/ol/ol.css" />
-  <script src="https://unpkg.com/ol/ol.js"></script>
+  <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.5.0/css/ol.css" />
+  <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.5.0/build/ol.js"></script>
   <style>
     html, body {
       margin: 0;
@@ -91,7 +91,6 @@
       resultDiv.innerText = `Estimated road distance between "${a}" and "${b}" is ${distance} km (mock).`;
     }
 
-    // NIH centers as features
     const nihCenters = [
       { name: "Roorkee (HQ)", coords: [77.8961, 29.8543] },
       { name: "Jammu", coords: [74.8570, 32.7266] },
