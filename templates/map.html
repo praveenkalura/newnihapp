@@ -1,105 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>NIH Center Distance Finder</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.css">
-    <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.js"></script>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-        header {
-            padding: 1rem;
-            background-color: #f0f0f0;
-            text-align: center;
-        }
-        #controls {
-            padding: 1rem;
-            background: #ffffff;
-            text-align: center;
-        }
-        select, button {
-            padding: 0.5rem;
-            margin: 0.5rem;
-            font-size: 1rem;
-        }
-        #result {
-            font-weight: bold;
-            margin-top: 1rem;
-        }
-        #map {
-            width: 100%;
-            height: 70vh;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>NIH Center Distance Finder</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    #controls {
+      position: absolute;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 1rem;
+      border-radius: 8px;
+      z-index: 10;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    select, button {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+    }
+    #result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>NIH Center Distance Finder</h1>
-        <p>A simple demo app to calculate distance between National Institute of Hydrology centers using a map interface.</p>
-    </header>
+  <div id="map"></div>
 
-    <div id="controls">
-        <select id="centerA">
-            <option value="">Select Center A</option>
-            <option>Roorkee (HQ)</option>
-            <option>Jammu</option>
-            <option>Kolkata</option>
-            <option>Belagavi</option>
-            <option>Kakinada</option>
-        </select>
+  <div id="controls">
+    <h2>NIH Center Distance Finder</h2>
+    <p>Select two centers to mock calculate distance:</p>
+    <select id="centerA">
+      <option value="">Select Center A</option>
+      <option>Roorkee (HQ)</option>
+      <option>Jammu</option>
+      <option>Kolkata</option>
+      <option>Belagavi</option>
+      <option>Kakinada</option>
+    </select>
 
-        <select id="centerB">
-            <option value="">Select Center B</option>
-            <option>Roorkee (HQ)</option>
-            <option>Jammu</option>
-            <option>Kolkata</option>
-            <option>Belagavi</option>
-            <option>Kakinada</option>
-        </select>
+    <select id="centerB">
+      <option value="">Select Center B</option>
+      <option>Roorkee (HQ)</option>
+      <option>Jammu</option>
+      <option>Kolkata</option>
+      <option>Belagavi</option>
+      <option>Kakinada</option>
+    </select>
 
-        <button onclick="calculateDistance()">Calculate Distance</button>
+    <button onclick="calculateDistance()">Calculate Distance</button>
 
-        <div id="result"></div>
-    </div>
+    <div id="result"></div>
+  </div>
 
-    <div id="map"></div>
+  <script>
+    function calculateDistance() {
+      const a = document.getElementById("centerA").value;
+      const b = document.getElementById("centerB").value;
+      const resultDiv = document.getElementById("result");
 
-    <script>
-        function calculateDistance() {
-            const a = document.getElementById('centerA').value;
-            const b = document.getElementById('centerB').value;
-            const resultDiv = document.getElementById('result');
+      if (!a || !b) {
+        resultDiv.innerText = "Please select both centers.";
+        return;
+      }
 
-            if (!a || !b) {
-                resultDiv.innerText = "Please select both centers.";
-                return;
-            }
+      if (a === b) {
+        resultDiv.innerText = "Both selected centers are the same.";
+        return;
+      }
 
-            if (a === b) {
-                resultDiv.innerText = "Both selected centers are the same.";
-                return;
-            }
+      const distance = (Math.random() * 1500 + 100).toFixed(2);
+      resultDiv.innerText = `Estimated road distance between "${a}" and "${b}" is ${distance} km (mock).`;
+    }
 
-            // Generate mock distance
-            const distance = (Math.random() * 1500 + 100).toFixed(2);
-            resultDiv.innerText = `Estimated road distance between "${a}" and "${b}" is ${distance} km (mock).`;
-        }
-
-        // Initialize OpenStreetMap
-        const map = new ol.Map({
-            target: 'map',
-            layers: [
-                new ol.layer.Tile({ source: new ol.source.OSM() })
-            ],
-            view: new ol.View({
-                center: ol.proj.fromLonLat([78.96, 22.59]),
-                zoom: 5
-            })
-        });
-    </script>
+    const map = new ol.Map({
+      target: "map",
+      layers: [new ol.layer.Tile({ source: new ol.source.OSM() })],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([78.96, 22.59]),
+        zoom: 5,
+      }),
+    });
+  </script>
 </body>
 </html>
