@@ -1,56 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>NIH Map App</title>
+    <meta charset="UTF-8">
+    <title>NIH Center Distance Finder</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.css">
     <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.js"></script>
-    <style>#map { width: 100%; height: 90vh; }</style>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            padding: 1rem;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        #controls {
+            padding: 1rem;
+            background: #ffffff;
+            text-align: center;
+        }
+        select, button {
+            padding: 0.5rem;
+            margin: 0.5rem;
+            font-size: 1rem;
+        }
+        #result {
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+        #map {
+            width: 100%;
+            height: 70vh;
+        }
+    </style>
 </head>
 <body>
-    <h2>Select Two NIH Centers</h2>
+    <header>
+        <h1>NIH Center Distance Finder</h1>
+        <p>A simple demo app to calculate distance between National Institute of Hydrology centers using a map interface.</p>
+    </header>
+
+    <div id="controls">
+        <select id="centerA">
+            <option value="">Select Center A</option>
+            <option>Roorkee (HQ)</option>
+            <option>Jammu</option>
+            <option>Kolkata</option>
+            <option>Belagavi</option>
+            <option>Kakinada</option>
+        </select>
+
+        <select id="centerB">
+            <option value="">Select Center B</option>
+            <option>Roorkee (HQ)</option>
+            <option>Jammu</option>
+            <option>Kolkata</option>
+            <option>Belagavi</option>
+            <option>Kakinada</option>
+        </select>
+
+        <button onclick="calculateDistance()">Calculate Distance</button>
+
+        <div id="result"></div>
+    </div>
+
     <div id="map"></div>
+
     <script>
+        function calculateDistance() {
+            const a = document.getElementById('centerA').value;
+            const b = document.getElementById('centerB').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!a || !b) {
+                resultDiv.innerText = "Please select both centers.";
+                return;
+            }
+
+            if (a === b) {
+                resultDiv.innerText = "Both selected centers are the same.";
+                return;
+            }
+
+            // Generate mock distance
+            const distance = (Math.random() * 1500 + 100).toFixed(2);
+            resultDiv.innerText = `Estimated road distance between "${a}" and "${b}" is ${distance} km (mock).`;
+        }
+
+        // Initialize OpenStreetMap
         const map = new ol.Map({
             target: 'map',
-            layers: [new ol.layer.Tile({source: new ol.source.OSM()})],
-            view: new ol.View({center: ol.proj.fromLonLat([78.96, 22.59]), zoom: 5})
-        });
-
-        const addGeoJsonLayer = (url) => new ol.layer.Vector({
-            source: new ol.source.Vector({
-                url: url,
-                format: new ol.format.GeoJSON()
+            layers: [
+                new ol.layer.Tile({ source: new ol.source.OSM() })
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([78.96, 22.59]),
+                zoom: 5
             })
-        });
-
-        const statesLayer = addGeoJsonLayer('/geojson/states/');
-        const centersLayer = addGeoJsonLayer('/geojson/nih_centers/');
-        map.addLayer(statesLayer);
-        map.addLayer(centersLayer);
-
-        let selected = [];
-        map.on('click', function (e) {
-            map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
-                if (layer === centersLayer) {
-                    const coords = ol.proj.toLonLat(feature.getGeometry().getCoordinates());
-                    selected.push(coords);
-                    if (selected.length === 2) {
-                        fetch(`/get_route/?coords[]=${selected[0][0]}&coords[]=${selected[0][1]}&coords[]=${selected[1][0]}&coords[]=${selected[1][1]}`)
-                        .then(resp => resp.json())
-                        .then(data => {
-                            const routeLayer = new ol.layer.Vector({
-                                source: new ol.source.Vector({
-                                    features: new ol.format.GeoJSON().readFeatures(data, {
-                                        featureProjection: 'EPSG:3857'
-                                    })
-                                })
-                            });
-                            map.addLayer(routeLayer);
-                        });
-                        selected = [];
-                    }
-                }
-            });
         });
     </script>
 </body>
