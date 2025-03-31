@@ -92,9 +92,44 @@
       resultDiv.innerText = `Estimated road distance between "${a}" and "${b}" is ${distance} km (mock).`;
     }
 
+    // Map and NIH center markers
+    const nihCenters = [
+      { name: "Roorkee (HQ)", coords: [77.8961, 29.8543] },
+      { name: "Jammu", coords: [74.8570, 32.7266] },
+      { name: "Kolkata", coords: [88.3639, 22.5726] },
+      { name: "Belagavi", coords: [74.4977, 15.8497] },
+      { name: "Kakinada", coords: [82.2475, 16.9891] }
+    ];
+
+    const features = nihCenters.map(center => {
+      const feature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat(center.coords)),
+        name: center.name
+      });
+      return feature;
+    });
+
+    const vectorSource = new ol.source.Vector({
+      features: features
+    });
+
+    const vectorLayer = new ol.layer.Vector({
+      source: vectorSource,
+      style: new ol.style.Style({
+        image: new ol.style.Circle({
+          radius: 6,
+          fill: new ol.style.Fill({ color: 'red' }),
+          stroke: new ol.style.Stroke({ color: 'white', width: 2 })
+        })
+      })
+    });
+
     const map = new ol.Map({
       target: "map",
-      layers: [new ol.layer.Tile({ source: new ol.source.OSM() })],
+      layers: [
+        new ol.layer.Tile({ source: new ol.source.OSM() }),
+        vectorLayer
+      ],
       view: new ol.View({
         center: ol.proj.fromLonLat([78.96, 22.59]),
         zoom: 5,
