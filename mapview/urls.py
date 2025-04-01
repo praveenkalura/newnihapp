@@ -1,8 +1,6 @@
 from django.urls import path
-from . import views
+from .views import map_home
 
 urlpatterns = [
-    path('geojson/states/', views.states_geojson, name='states_geojson'),
-    path('geojson/nih_centers/', views.centers_geojson, name='centers_geojson'),
-    path('get_route/', views.get_route, name='get_route'),
+    path('', map_home, name='map-home'),  # Loads map.html at root
 ]
