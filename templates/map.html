@@ -42,13 +42,12 @@
 <body>
 <div id="map"></div>
 <div id="controls">
-  <h2>NIH Center Distance Finder</h2>
+  <h2>NIH Center Distance Finder Demo APP Made by Praveen Kalura IIT Roorkee(</h2>
   <p>Select two centers to mock calculate distance:</p>
   <select id="centerA">
     <option value="">Select Center A</option>
     <option value="Roorkee">National Institute of Hydrology Headquarters, Roorkee</option>
 <option value="Jammu">Western Himalayan Regional Centre, Jammu</option>
-<option value="Kolkata">Eastern Regional Centre, Kolkata</option>
 <option value="Belagavi">Hard Rock Regional Centre, Belagavi</option>
 <option value="Kakinada">Deltaic Regional Centre, Kakinada</option>
 <option value="Bhopal">Central India Hydrology Regional Centre, Bhopal</option>
@@ -60,7 +59,6 @@
     <option value="">Select Center B</option>
     <option value="Roorkee">National Institute of Hydrology Headquarters, Roorkee</option>
 <option value="Jammu">Western Himalayan Regional Centre, Jammu</option>
-<option value="Kolkata">Eastern Regional Centre, Kolkata</option>
 <option value="Belagavi">Hard Rock Regional Centre, Belagavi</option>
 <option value="Kakinada">Deltaic Regional Centre, Kakinada</option>
 <option value="Bhopal">Central India Hydrology Regional Centre, Bhopal</option>
@@ -100,10 +98,6 @@
 new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([74.857, 32.7266])),
         name: "Western Himalayan Regional Centre, Jammu"
-    }),
-new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.fromLonLat([88.3639, 22.5726])),
-        name: "Eastern Regional Centre, Kolkata"
     }),
 new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([74.4977, 15.8497])),
