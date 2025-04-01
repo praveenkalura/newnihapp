@@ -13,3 +13,10 @@ class NIHCenter(models.Model):
 
     def __str__(self):
         return self.name
+
+class IndiaState(models.Model):
+    stname = models.CharField(max_length=100)
+    geom = models.MultiPolygonField(srid=4326)
+
+    def __str__(self):
+        return self.stname
