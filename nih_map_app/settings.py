@@ -1,12 +1,22 @@
 from pathlib import Path
-import dj_database_url
 import os
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'your-default-secret-key')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = ['*']
+
+def _detect_gdal() -> bool:
+    try:
+        from django.contrib.gis import gdal  # noqa: F401
+        return True
+    except Exception:
+        return False
+
+_use_gis_env = os.environ.get('USE_GIS')
+USE_GIS = _detect_gdal() if _use_gis_env is None else _use_gis_env.lower() in ('1', 'true', 'yes', 'on')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -15,9 +25,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.gis',
-    'mapview',
 ]
+if USE_GIS:
+    INSTALLED_APPS.append('django.contrib.gis')
+INSTALLED_APPS.append('mapview')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,9 +60,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nih_map_app.wsgi.application'
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
-}
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if USE_GIS and DATABASE_URL:
+    DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
